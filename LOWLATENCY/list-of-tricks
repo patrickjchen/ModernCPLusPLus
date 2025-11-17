@@ -1,0 +1,87 @@
+ Here are key C++ low-latency tricks and tips:
+
+  Compile-Time Optimization
+
+  1. constexpr - Move computations to compile time (as we demonstrated with Fibonacci)
+  2. consteval (C++20) - Force compile-time evaluation
+  3. Template metaprogramming - Type computations at compile time
+  4. if constexpr - Eliminate dead code branches at compile time
+
+  Static Polymorphism
+
+  5. CRTP - Avoid vtable lookups (as we demonstrated)
+  6. std::variant + std::visit - Type-safe alternatives to virtual functions
+  7. Template specialization - Compile-time dispatch instead of runtime
+
+  Memory Layout & Cache Optimization
+
+  8. Cache line alignment - Avoid false sharing (as we demonstrated)
+  9. Structure packing - Minimize padding, keep hot data together
+  10. Data-oriented design - Arrays of structs vs struct of arrays (SoA)
+  11. Prefetching - __builtin_prefetch() for predictable access patterns
+  12. Huge pages - Reduce TLB misses for large data structures
+
+  Memory Management
+
+  13. Object pools - Pre-allocate objects, avoid runtime allocation
+  14. Stack allocation - Use std::array instead of std::vector when size is known
+  15. Custom allocators - Arena allocators, monotonic allocators
+  16. Avoid new/delete in hot paths - All allocation should be done during initialization
+
+  Compiler Hints & Intrinsics
+
+  17. [[likely]]/[[unlikely]] - Branch prediction hints
+  18. __builtin_expect() - Help compiler optimize branches
+  19. inline/always_inline - Control inlining decisions
+  20. restrict keyword - Tell compiler pointers don't alias
+
+  Loop Optimization
+
+  21. Loop unrolling - Reduce branch overhead (as we demonstrated)
+  22. Loop fusion - Combine multiple loops over same data
+  23. Minimize loop-carried dependencies - Enable better pipelining
+
+  Atomic & Lock-Free
+
+  24. Lock-free data structures - Avoid mutex overhead
+  25. std::atomic with memory_order_relaxed - When ordering not critical
+  26. Spinlocks - For very short critical sections
+  27. Read-Copy-Update (RCU) - For read-heavy workloads
+
+  System-Level
+
+  28. CPU pinning - pthread_setaffinity_np() to avoid migration
+  29. Isolate CPUs - Use isolcpus kernel parameter
+  30. Disable frequency scaling - Lock CPU to max frequency
+  31. NUMA awareness - Allocate memory on correct node
+  32. Real-time scheduling - SCHED_FIFO or SCHED_DEADLINE
+
+  Code Structure
+
+  33. Avoid exceptions in hot paths - Use error codes or std::expected
+  34. Minimize virtual calls - Know when polymorphism is needed
+  35. Avoid std::function overhead - Use templates when possible
+  36. Small string optimization (SSO) - Be aware of string allocation thresholds
+
+  Measurement & Profiling
+
+  37. Google Benchmark - Microbenchmark everything (as we're doing)
+  38. perf stat - Measure cache misses, branch mispredictions
+  39. Intel VTune / AMD uProf - Deep profiling
+  40. TSC (Time Stamp Counter) - High-resolution timing: __rdtsc()
+
+  Advanced Techniques
+
+  41. Branch-free code - Use arithmetic/logical ops instead of if/else
+  42. SIMD intrinsics - SSE/AVX for parallel operations
+  43. Bit manipulation tricks - Fast operations using bit tricks
+  44. Lookup tables - Trade memory for computation time
+  45. Hot/cold splitting - Separate frequently used code from rare paths
+
+  Common Pitfalls to Avoid
+
+  46. Don't use std::endl - Use '\n' (endl flushes)
+  47. Avoid std::shared_ptr in hot paths - Atomic ref counting overhead
+  48. Watch out for hidden allocations - Lambdas capturing large objects
+  49. Beware of copy elision failures - Use move semantics
+  50. Profile before optimizing - Measure, don't guess
