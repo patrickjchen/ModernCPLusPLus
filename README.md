@@ -1,2 +1,2 @@
-# LearningModernCPlusPlus
-code and docs for learning modern c++
+# ModernCPlusPlus
+talks and google benchmarked code for low latency C++
